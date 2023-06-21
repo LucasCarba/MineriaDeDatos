@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="10.1.001" expanded="true" height="68" name="dataset-original" width="90" x="112" y="136">
+        <parameter key="repository_entry" value="../CSV/dataset-original"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="Eliminar genero=other" width="90" x="313" y="136">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="gender.does_not_equal.Other"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="blending:set_role" compatibility="10.1.001" expanded="true" height="82" name="Set Role" width="90" x="581" y="136">
+        <list key="set_roles">
+          <parameter key="id" value="id"/>
+        </list>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="Eliminar faltantes" width="90" x="782" y="136">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="no_missing_attributes"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="stroke.eq.1"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <connect from_op="dataset-original" from_port="output" to_op="Eliminar genero=other" to_port="example set input"/>
+      <connect from_op="Eliminar genero=other" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Eliminar faltantes" to_port="example set input"/>
+      <connect from_op="Eliminar faltantes" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <description align="center" color="orange" colored="true" height="121" resized="false" width="180" x="69" y="230">Solo se corrigieron los tipos de datos que estaban mal clasificados, como algunos datos reales con valores &amp;quot;?&amp;quot; que hacia que quede polynomial</description>
+      <description align="center" color="orange" colored="true" height="105" resized="false" width="180" x="285" y="252">Se elimina el unico ejemplo de la muestra que tenia genero &amp;quot;otro&amp;quot;</description>
+      <description align="center" color="orange" colored="true" height="105" resized="false" width="180" x="776" y="257">Se filtran todos los ejemplos que tengan datos faltantes. &lt;br/&gt;Total a la salida = 4908</description>
+      <description align="center" color="orange" colored="true" height="50" resized="true" width="221" x="44" y="78">Ejemplos total a la entrada = 5110</description>
+      <description align="center" color="blue" colored="true" height="58" resized="true" width="177" x="461" y="10">Subproceso:&lt;br&gt;&amp;quot;Entrada-limpiada&amp;quot;</description>
+    </process>
+  </operator>
+</process>

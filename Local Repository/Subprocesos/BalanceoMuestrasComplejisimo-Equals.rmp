@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="Stroke=0" width="90" x="179" y="391">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="stroke.equals.0"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="10.1.001" expanded="true" height="82" name="sample size" width="90" x="246" y="187">
+        <parameter key="sample" value="relative"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="300"/>
+        <parameter key="sample_ratio" value="0.3"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class">
+          <parameter key="stroke" value="500"/>
+        </list>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.1.001" expanded="true" height="103" name="Multiply" width="90" x="380" y="136"/>
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="hypertension=0" width="90" x="514" y="136">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="hypertension.equals.0"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="10.1.001" expanded="true" height="82" name="sample size (2)" width="90" x="581" y="34">
+        <parameter key="sample" value="relative"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="300"/>
+        <parameter key="sample_ratio" value="0.03"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class">
+          <parameter key="stroke" value="500"/>
+        </list>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="heart_disease=0" width="90" x="447" y="340">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="heart_disease.equals.0"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="10.1.001" expanded="true" height="82" name="sample size (3)" width="90" x="581" y="289">
+        <parameter key="sample" value="relative"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="200"/>
+        <parameter key="sample_ratio" value="0.03"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class">
+          <parameter key="stroke" value="500"/>
+        </list>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="union" compatibility="10.1.001" expanded="true" height="82" name="Union (3)" width="90" x="715" y="340"/>
+      <operator activated="true" class="union" compatibility="10.1.001" expanded="true" height="82" name="Union" width="90" x="715" y="85"/>
+      <operator activated="true" class="union" compatibility="10.1.001" expanded="true" height="82" name="Union (4)" width="90" x="916" y="136"/>
+      <operator activated="true" class="union" compatibility="10.1.001" expanded="true" height="82" name="Union (5)" width="90" x="916" y="442"/>
+      <operator activated="true" class="remove_duplicates" compatibility="10.1.001" expanded="true" height="103" name="Remove Duplicates" width="90" x="1050" y="289">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="treat_missing_values_as_duplicates" value="false"/>
+      </operator>
+      <connect from_port="input 1" to_op="Stroke=0" to_port="example set input"/>
+      <connect from_op="Stroke=0" from_port="example set output" to_op="sample size" to_port="example set input"/>
+      <connect from_op="Stroke=0" from_port="unmatched example set" to_op="Union (5)" to_port="example set 2"/>
+      <connect from_op="sample size" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="hypertension=0" to_port="example set input"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="heart_disease=0" to_port="example set input"/>
+      <connect from_op="hypertension=0" from_port="example set output" to_op="sample size (2)" to_port="example set input"/>
+      <connect from_op="hypertension=0" from_port="unmatched example set" to_op="Union" to_port="example set 2"/>
+      <connect from_op="sample size (2)" from_port="example set output" to_op="Union" to_port="example set 1"/>
+      <connect from_op="heart_disease=0" from_port="example set output" to_op="sample size (3)" to_port="example set input"/>
+      <connect from_op="heart_disease=0" from_port="unmatched example set" to_op="Union (3)" to_port="example set 2"/>
+      <connect from_op="sample size (3)" from_port="example set output" to_op="Union (3)" to_port="example set 1"/>
+      <connect from_op="Union (3)" from_port="union" to_op="Union (4)" to_port="example set 2"/>
+      <connect from_op="Union" from_port="union" to_op="Union (4)" to_port="example set 1"/>
+      <connect from_op="Union (4)" from_port="union" to_op="Union (5)" to_port="example set 1"/>
+      <connect from_op="Union (5)" from_port="union" to_op="Remove Duplicates" to_port="example set input"/>
+      <connect from_op="Remove Duplicates" from_port="example set output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="source_input 2" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <description align="center" color="blue" colored="true" height="50" resized="true" width="154" x="292" y="16">Balanceo de muestras</description>
+    </process>
+  </operator>
+</process>

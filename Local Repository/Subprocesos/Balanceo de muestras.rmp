@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="Stroke=0" width="90" x="380" y="187">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="stroke.equals.0"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="10.1.001" expanded="true" height="82" name="sample size" width="90" x="514" y="136">
+        <parameter key="sample" value="absolute"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="170"/>
+        <parameter key="sample_ratio" value="0.1"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class">
+          <parameter key="stroke" value="500"/>
+        </list>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="union" compatibility="10.1.001" expanded="true" height="82" name="Union" width="90" x="648" y="187"/>
+      <connect from_port="input 1" to_op="Stroke=0" to_port="example set input"/>
+      <connect from_op="Stroke=0" from_port="example set output" to_op="sample size" to_port="example set input"/>
+      <connect from_op="Stroke=0" from_port="unmatched example set" to_op="Union" to_port="example set 2"/>
+      <connect from_op="sample size" from_port="example set output" to_op="Union" to_port="example set 1"/>
+      <connect from_op="Union" from_port="union" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="source_input 2" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <description align="center" color="orange" colored="true" height="66" resized="true" width="181" x="273" y="295">Se diferencian los valores con stroke = 0 (exa) de los que tienen stroke = 1 (unm)</description>
+      <description align="center" color="orange" colored="true" height="50" resized="true" width="175" x="533" y="81">Se seleccionan N muestras aleatoriamente</description>
+      <description align="center" color="orange" colored="true" height="73" resized="true" width="186" x="682" y="278">Se unifican nuevamente los datos para obtener una muestra mas balanceada</description>
+      <description align="center" color="blue" colored="true" height="50" resized="true" width="154" x="329" y="101">Balanceo de muestras</description>
+    </process>
+  </operator>
+</process>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="10.1.001" expanded="true" height="68" name="dataset-original" width="90" x="45" y="136">
+        <parameter key="repository_entry" value="../CSV/dataset-original"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="Eliminar genero=other (2)" width="90" x="179" y="136">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="gender.does_not_equal.Other"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="blending:set_role" compatibility="10.1.001" expanded="true" height="82" name="Set Role (2)" width="90" x="313" y="136">
+        <list key="set_roles">
+          <parameter key="id" value="id"/>
+          <parameter key="stroke" value="label"/>
+        </list>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.1.001" expanded="true" height="103" name="Eliminar faltantes (2)" width="90" x="447" y="136">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="no_missing_attributes"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="stroke.eq.1"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="10.1.001" expanded="true" height="103" name="Normalize" width="90" x="581" y="136">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="method" value="Z-transformation"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="1.0"/>
+        <parameter key="allow_negative_values" value="false"/>
+      </operator>
+      <operator activated="true" class="nominal_to_numerical" compatibility="10.1.001" expanded="true" height="103" name="Nominal to Numerical" width="90" x="715" y="136">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="binominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="coding_type" value="unique integers"/>
+        <parameter key="use_comparison_groups" value="false"/>
+        <list key="comparison_groups"/>
+        <parameter key="unexpected_value_handling" value="all 0 and warning"/>
+        <parameter key="use_underscore_in_name" value="false"/>
+      </operator>
+      <connect from_op="dataset-original" from_port="output" to_op="Eliminar genero=other (2)" to_port="example set input"/>
+      <connect from_op="Eliminar genero=other (2)" from_port="example set output" to_op="Set Role (2)" to_port="example set input"/>
+      <connect from_op="Set Role (2)" from_port="example set output" to_op="Eliminar faltantes (2)" to_port="example set input"/>
+      <connect from_op="Eliminar faltantes (2)" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="example set output" to_op="Nominal to Numerical" to_port="example set input"/>
+      <connect from_op="Nominal to Numerical" from_port="example set output" to_port="result 1"/>
+      <connect from_op="Nominal to Numerical" from_port="original" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <description align="center" color="orange" colored="true" height="121" resized="false" width="180" x="17" y="223">Solo se corrigieron los tipos de datos que estaban mal clasificados, como algunos datos reales con valores &amp;quot;?&amp;quot; que hacia que quede polynomial</description>
+      <description align="center" color="orange" colored="true" height="105" resized="false" width="180" x="231" y="27">Se elimina el unico ejemplo de la muestra que tenia genero &amp;quot;otro&amp;quot;</description>
+      <description align="center" color="orange" colored="true" height="105" resized="false" width="180" x="262" y="249">Se define el atributo id como de tipo ID, y el atributo Stroke como Label</description>
+      <description align="center" color="orange" colored="true" height="105" resized="false" width="180" x="451" y="37">Se filtran todos los ejemplos que tengan datos faltantes. &lt;br/&gt;Total a la salida = 4908</description>
+      <description align="center" color="orange" colored="true" height="50" resized="true" width="221" x="12" y="70">Ejemplos total a la entrada = 5110</description>
+    </process>
+  </operator>
+</process>
