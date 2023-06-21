@@ -1,2 +1,2 @@
 # MineriaDeDatos
-Minería de Datos usando Sistemas Inteligentes UNLP
+Minería de Datos usando Sistemas Inteligentes - RAPIDMINER
